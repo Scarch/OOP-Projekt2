@@ -1,0 +1,11 @@
+Kääna "õudne" omastavas käändes ainsuses.;õudse
+Kääna "susi" omastavas käändes ainsuses.;soe
+Mis sõna kujutab kujult lähedaseid, ent erineva tähendusega sõnu (-nüüm lõpuga sõna)?;paronüüm
+Mis sõna tähendab sama, mis "vastandsõna" (-nüüm lõpuga sõna)?;antonüüm
+Mis on pikim eestikeelne palindroom (nii päri- kui ka tagurpidi lugedes täpselt samasugune)?; kuulilennuteetunneliluuk
+
+Mis on sõna liiderlik tähendus?;abieluväliseid suhteid harrastav;abieluväliseid suhteid harrastav, korraldavaid ja suunavaid oskusi omav, hirmuvalitsejalik ja vägivaldne
+Mis on sõna osavõtlik tähendus?;muret mõista püüdev;muret mõista püüdev, teistega koos midagi tegev, midagi või kedagi kuhugi juhtiv
+Kuidas nimetatakse sõna, mille tähendus on "kulleri osutatav teenus"?;kulleriteenus;kulleriteenus, kullerteenus, kulleriteteenus
+Kuidas käsitsikirjas märgitakse tsitaatsõnu (eesti keeles kasutatavad võõrkeelsed sõnad)?;lainelise joonega teksti all;lainelise joonega teksti all, sirge joonega teksti all, ei millegagi, spetsiaalse sümboliga sõna kõrval
+Milline neist eraldatakse muust lausest koma(de)ga?;üte;üte, eeslisand, omadussõna, kui-järellisand, järellisand olevas käändes

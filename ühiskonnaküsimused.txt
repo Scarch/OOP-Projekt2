@@ -1,0 +1,11 @@
+Riigi juhtimise põhimõtted ja seda korraldav tegevus.;Poliitika
+Ideoloogiliste seisukohtade esitamine avalikkusele lihtsustatud kujul.;Propaganda
+Kirjalik õigusakt, mille on andnud ettenähtud korras parlament.;Seadus
+Kohtus tsiviilkohtuasja algataja.;Hageja
+Juriidilise haridusega isik, kes sooritab riigi volitusel teatud õigustoiminguid.;Notar
+
+Milline diktatuuri vorm on kõige piiravam tavainimsele?;totalitaarne;totalitaarne, autoritaarne, autokraatlik, feodalistlik
+Kellel on Eestis peamine ülesanne valitsuse esindamine ja selle tegevuse nii formaalne kui sisuline juhtimine?;peaminister;peaminister, riigikogu esimees, valitsusminister, president
+Kellel on USAs peamine ülesanne valitsuse esindamine ja selle tegevuse nii formaalne kui sisuline juhtimine?;president;peaminister, riigikogu esimees, valitsusminister, president
+Milline neist ministeeriumitest ei eksisteeri Eestis?;Rahvusliku Säilitamise ja Traditsioonide Ministeerium;Regionaal- ja Põllumajandusministeerium, Majandus- ja kommunikatsiooniministeerium, Rahvusliku Säilitamise ja Traditsioonide Ministeerium
+Mis on käibemaksu ingliskeelne lühend?;VAT;VAT, CGT, IT, CT, PT

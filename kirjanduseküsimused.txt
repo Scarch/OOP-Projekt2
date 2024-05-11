@@ -1,0 +1,12 @@
+Kirjanik, kes on kirjutanud “Sipsik” ja “Naksitrallid” (eesnimi ja perenimi);Eno Raud
+“Tõde ja Õigus” tegelane, kes kaevas Andrese ja Pearu kraavi? (Vastusel peab olema sidekriips);sauna-Madis
+Kirjanik, kes lõi väikelastele proosaraamatuid, ning on “Krõlli” looja (eesnimi ja perenimi)?;Ellen Niit
+Kes on "Vene kirjanduse isa" (eesnimi ja perenimi)?;Alexander Pushkin
+Kes on "Kolm musketäri" raamatu autor? (eesnimi ja perenimi);Alexandre Dumas
+
+Koht, kus toimub "Kevade" sündumsed?;Palamuse;Türi, Kuremaa, Palamuse, Saarepeedi
+Kirjanik, kes lõi "Kevade", "Suvi" ja "Sügis" raamatu?;Oskar Luts;Tõnu Õnnepalu, Karl Ast, Oskar Luts, Piret Jaaks
+Raamat "1984" peategelase nimi?;Winston;Syme, Winston, Emmanuel, O'Brien
+Kes on "Väike prints" raamatu autor?;Antoine de Saint-Exupery;Albert Camus, Marcel Proust, Antoine de Saint-Exupery, Jean-Paul Sartre
+Kes on "Kalevipoeg" autor?;Kreutzwald;Eduard Vilde, Karl Ristikivi, Kreutzwald, Juhan Liiv
+Mis on Ray Bradury tuntuim antiutoopia teos?;Fahrenheit 451; Marsi kroonikad, Kaleidoskoop, Põrmust tõusnud, Fahrenheit 451 Kogu linn magab, Vist on kuri tulekul

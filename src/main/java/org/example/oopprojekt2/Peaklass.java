@@ -19,14 +19,14 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class Peaklass extends Application {
 
+    private static Button alustaMänguNupp = new Button("Alusta mängu");
     private static int kasutajaPunktid = 0;
     private static int mitmesKüsimus = 0;
     private static int mituÕigesti = 0;
@@ -36,12 +36,13 @@ public class Peaklass extends Application {
     private static KüsimusteTeema suvalineTeema;
     final private static Button esitaVastusNupp = new Button("Esita vastus");
     private static List<RadioButton> valikud;
+    private static TextField avatudVastusVäli = new TextField();
     private static long algusAeg;
     private static VBox küsimusVBox;
     final private static Button järgmineKüsimus = new Button("Liigu järgmisele küsimusele");
-
-
-
+    final private static Button kuvaEdetabel = new Button("Kuva edetabel");
+    final private static Button suleMäng = new Button("Sule mäng");
+    final private static File edetabeliFail = new File("edetabel.txt");
 
     @Override
     public void start(Stage pealava) throws IOException {
@@ -58,27 +59,28 @@ public class Peaklass extends Application {
 
         // Nupud
         VBox nupudVBox = new VBox();
-        Button alustaMängu = new Button("Alusta mängu");
+        alustaMänguNupp.setText("Alusta mängu");
         Button mänguInfo = new Button("Kuva sissejuhatus");
-        Button suleMäng = new Button("Sule mäng");
-        alustaMängu.setPrefHeight(50);
-        alustaMängu.setPrefWidth(125);
-        nupudVBox.getChildren().addAll(alustaMängu, mänguInfo, suleMäng);
+        alustaMänguNupp.setPrefHeight(50);
+        alustaMänguNupp.setPrefWidth(125);
+        nupudVBox.getChildren().addAll(alustaMänguNupp, mänguInfo, suleMäng, kuvaEdetabel);
         nupudVBox.setSpacing(10);
         nupudVBox.setAlignment(Pos.CENTER);
         juur.setCenter(nupudVBox);
 
-        alustaMängu.setOnAction(new EventHandler<ActionEvent>() {
+        // Mängu alustamine
+        alustaMänguNupp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 try {
-                    alustaMäng(pealava);
+                    alustaMäng(pealava); // Pidi kasutama try-catch, sest ei saa selle meetodi signatuuri panna "throws ..."
                 } catch (IOException | InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }
         });
 
+        // Mängu kirjelduse kuvamine
         mänguInfo.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -105,10 +107,55 @@ public class Peaklass extends Application {
             }
         });
 
+        // Mängu sulgemine
         suleMäng.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 pealava.close();
+            }
+        });
+
+        if (!edetabeliFail.exists())
+            edetabeliFail.createNewFile();
+        kuvaEdetabel.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+
+                List<EdetabeliTulemus> edetabeliTulemused = new ArrayList<>();
+
+                try {
+                    // Tagastab sorteerituna
+                    edetabeliTulemused = loeEdetabelFail();
+                } catch (IOException e) {
+                    throw new RuntimeException(e); // Pidi kasutama try-catch, sest ei saa selle meetodi signatuuri panna "throws ..."
+                }
+
+
+                VBox tulemused = new VBox();
+                tulemused.setAlignment(Pos.CENTER);
+                double kõigeLaiem = 0;
+                for (int i = 1; i <= edetabeliTulemused.size(); i++) {
+                    EdetabeliTulemus edetabeliTulemus = edetabeliTulemused.get(i - 1);
+                    Text tulemus = new Text(i + ". " + edetabeliTulemus.getNimi() + ": " + edetabeliTulemus.getPunktid());
+                    if (kõigeLaiem < tulemus.getLayoutBounds().getWidth())
+                        kõigeLaiem = tulemus.getLayoutBounds().getWidth();
+                    tulemused.getChildren().add(tulemus);
+                }
+
+                // Kui edetabeli failis ei ole veel tulemusi
+                Text tulemusedPuuduvad = new Text();
+                if (edetabeliTulemused.isEmpty()) {
+                    tulemusedPuuduvad.setText("Tulemusi ei leitud (" + edetabeliFail.getAbsolutePath() + ")");
+                    tulemused.getChildren().add(tulemusedPuuduvad);
+                }
+
+                Scene edetabelStseen = new Scene(tulemused, Math.max(200, Math.max(tulemusedPuuduvad.getLayoutBounds().getWidth() + 100, kõigeLaiem + 100f)), Math.max(100, tulemused.getLayoutBounds().getWidth() + 100));
+                Stage edetabelLava = new Stage();
+                edetabelLava.setTitle("Küsimuste mängu edetabel");
+                edetabelLava.setScene(edetabelStseen);
+                edetabelLava.setResizable(false);
+                edetabelLava.show();
+
             }
         });
 
@@ -127,6 +174,27 @@ public class Peaklass extends Application {
         pealava.show();
     }
 
+    private static List<EdetabeliTulemus> loeEdetabelFail() throws IOException {
+
+        List<EdetabeliTulemus> tulemused = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("edetabel.txt"), StandardCharsets.UTF_8))) {
+
+            // Edetabelis on nimi ees ning punktid taga
+            String edetabelRida = br.readLine();
+            while (edetabelRida != null) {
+                String nimi = edetabelRida.split(";")[0];
+                String punktid = edetabelRida.split(";")[1];
+                tulemused.add(new EdetabeliTulemus(nimi, Integer.parseInt(punktid)));
+                edetabelRida = br.readLine();
+            }
+
+        }
+
+        Collections.sort(tulemused);
+        return tulemused;
+    }
+
     private void lisatekstVBoxi(VBox vbox, String tekst) {
         String[] tekstOsadena = tekst.split(";");
 
@@ -142,10 +210,11 @@ public class Peaklass extends Application {
 
     /**
      * Loeb etteantud failist küsimused välja ning sorteerib need kas avatud vastusega või valikvastustega küsimusteks
+     *
      * @param failinimi Loetava faili nimi
      * @return ArrayListide massiiv, mis koosneb avatud vastusega küsimustest indeksil 0 ning valikvastustega küsimustest indeksil 0
      */
-    public static ArrayList<AvatudKüsimus>[] loeFail(String failinimi) throws IOException {
+    public static ArrayList<AvatudKüsimus>[] loeTeemaFail(String failinimi) throws IOException {
 
         ArrayList<AvatudKüsimus>[] kysimused = new ArrayList[2];
         kysimused[0] = new ArrayList<>();
@@ -154,16 +223,15 @@ public class Peaklass extends Application {
         // Esimene element on avatud vastustega küsimuste massiiv
         // Teine element on valikvastustega küsimuste massiiv
 
-        try(Scanner sc = new Scanner(new File(failinimi), StandardCharsets.UTF_8)) {
+        try (Scanner sc = new Scanner(new File(failinimi), StandardCharsets.UTF_8)) {
             while (sc.hasNextLine()) {
                 String rida = sc.nextLine();
                 String[] massiiv = rida.split(";");
                 if (massiiv.length == 2) {
-                    AvatudKüsimus kysimus = new AvatudKüsimus(massiiv[0],massiiv[1]);
+                    AvatudKüsimus kysimus = new AvatudKüsimus(massiiv[0], massiiv[1]);
                     kysimused[0].add(kysimus);
-                }
-                else if (massiiv.length == 3){
-                    ValikvastustegaKüsimus kysimus = new ValikvastustegaKüsimus(massiiv[0],massiiv[1],massiiv[2].split(", "));
+                } else if (massiiv.length == 3) {
+                    ValikvastustegaKüsimus kysimus = new ValikvastustegaKüsimus(massiiv[0], massiiv[1], massiiv[2].split(", "));
                     kysimused[1].add(kysimus);
                 }
             }
@@ -267,7 +335,7 @@ public class Peaklass extends Application {
             }
         });
 
-        vbox.getChildren().addAll(erind, küsimuseTüüp, valikVastustega, avatudVastustega, juhis, ajalooValik,eestiKeeleValik,kirjanduseValik, ühiskonnaValik, arvuKüsimus, mituKüsimust, edasiNupp);
+        vbox.getChildren().addAll(erind, küsimuseTüüp, valikVastustega, avatudVastustega, juhis, ajalooValik, eestiKeeleValik, kirjanduseValik, ühiskonnaValik, arvuKüsimus, mituKüsimust, edasiNupp);
 
         Scene algusStseen = new Scene(piiripaan, 600, 400);
         lava.setScene(algusStseen);
@@ -275,17 +343,24 @@ public class Peaklass extends Application {
 
     /**
      * Meetod, kus tegelikult hakkame küsimusi küsima
+     *
      * @param kasValikvastused Kas küsimused on valikvastustega
-     * @param misTeemad Mis teemasid küsitakse
-     * @param mituKüsimust Mitu küsimust küsitakse igast teemast;
+     * @param misTeemad        Mis teemasid küsitakse
+     * @param mituKüsimust     Mitu küsimust küsitakse igast teemast;
      */
     private static void alustaKüsimist(boolean kasValikvastused, List<String> misTeemad, int mituKüsimust, Stage lava) throws IOException, InterruptedException {
+
+        // Kui kasutaja mängib uuesti, nullime kõik eelnevad tulemused
+        kasutajaPunktid = 0;
+        valestiVastatudKüsimused = new ArrayList<>();
+        mitmesKüsimus = 0;
+        mituÕigesti = 0;
 
         teemadeMassiv = new ArrayList<>(misTeemad.size());
 
         for (String teemaString : misTeemad) {
             String teemaFail = leiaTeemaFail(teemaString);
-            ArrayList<AvatudKüsimus>[] teemaKüsimused = loeFail(teemaFail);
+            ArrayList<AvatudKüsimus>[] teemaKüsimused = loeTeemaFail(teemaFail);
             KüsimusteTeema lisatavTeema = new KüsimusteTeema(teemaString, teemaKüsimused[0], teemaKüsimused[1]);
             teemadeMassiv.add(lisatavTeema);
         }
@@ -298,7 +373,7 @@ public class Peaklass extends Application {
         // Selles tsükklis küsime küsimusi
         // Peab mõtlema, kas küsimused lähevad suvaliselt teemade vahel või ühe teema küsimused tulevad järjest
 
-        int suvaliseTeemaIndeks = (int) (teemadeMassiv.size()*Math.random());
+        int suvaliseTeemaIndeks = (int) (teemadeMassiv.size() * Math.random());
         suvalineTeema = teemadeMassiv.get(suvaliseTeemaIndeks);
 
         if (kasValikvastused) suvalineKüsimus = suvalineTeema.tagastaSuvalineValikKüsimus();
@@ -307,7 +382,8 @@ public class Peaklass extends Application {
         küsimusVBox = new VBox(10);
         valikud = new ArrayList<>();
         Scene küsimusStseen = kuvaKüsimus(suvalineKüsimus, kasValikvastused, küsimusVBox, valikud);
-        TextField avatudVastusVäli = new TextField();
+        avatudVastusVäli = new TextField();
+        avatudVastusVäli.setMaxWidth(150);
         if (kasValikvastused)
             valikud.getFirst().setSelected(true);
         else
@@ -336,7 +412,7 @@ public class Peaklass extends Application {
                 // For loopi koostada küsimuste väljastamiseks on raske, sest see vajaks mingi imeliku ootamise metoodika implementeerimist
 
                 long lõppAeg = System.currentTimeMillis();
-                long küsimuseleVastamiseAeg = (lõppAeg-algusAeg)/1000;
+                long küsimuseleVastamiseAeg = (lõppAeg - algusAeg) / 1000;
 
                 // Kasutaja vastuse sisestamine muutujasse
                 String kasutajaVastus = "";
@@ -357,12 +433,12 @@ public class Peaklass extends Application {
                     // Mängija saab boonuspunkte, kui on vastanud 15 sekundi sees;
                     // Mida kiiremini, seda rohkem punkte
                     // Iga sekund mis kaob võtab boonuspunktide hulgast 5 punkti ära
-                    int boonuspunktid = (int) (Math.max((15 - küsimuseleVastamiseAeg), 0)*5);
+                    int boonuspunktid = (int) (Math.max((15 - küsimuseleVastamiseAeg), 0) * 5);
                     kasutajaPunktid += 50 + boonuspunktid;
                     mituÕigesti++;
                     tulemus.setText("Õige vastus!");
                     tulemus.setFill(Color.GREEN);
-                } else{
+                } else {
                     valestiVastatudKüsimused.add(suvalineKüsimus);
                     tulemus.setText("Vale vastus... Õige vastus: " + suvalineKüsimus.getÕigeVastus());
                     tulemus.setFill(Color.RED);
@@ -391,7 +467,7 @@ public class Peaklass extends Application {
             @Override
             public void handle(ActionEvent actionEvent) {
                 // Otsime uue suvalise küsimuse
-                int suvaliseTeemaIndeks = (int) (teemadeMassiv.size()*Math.random());
+                int suvaliseTeemaIndeks = (int) (teemadeMassiv.size() * Math.random());
                 suvalineTeema = teemadeMassiv.get(suvaliseTeemaIndeks);
                 if (kasValikvastused) suvalineKüsimus = suvalineTeema.tagastaSuvalineValikKüsimus();
                 else suvalineKüsimus = suvalineTeema.tagastaSuvalineAvatudKüsimus();
@@ -400,7 +476,8 @@ public class Peaklass extends Application {
                 küsimusVBox = new VBox(10);
                 valikud = new ArrayList<>();
                 Scene küsimusStseen = kuvaKüsimus(suvalineKüsimus, kasValikvastused, küsimusVBox, valikud);
-                TextField avatudVastusVäli = new TextField();
+                avatudVastusVäli = new TextField();
+                avatudVastusVäli.setMaxWidth(150);
                 if (kasValikvastused)
                     valikud.getFirst().setSelected(true);
                 else
@@ -411,32 +488,76 @@ public class Peaklass extends Application {
             }
         });
 
-
-        /*
-
-        if (vastusteÜlevaade()) {
-            for (AvatudKüsimus küsimus : valestiVastatudKüsimused) {
-                System.out.println("Küsimus: " + küsimus.getKysimus());
-                System.out.println("Vastus: " + küsimus.getÕigeVastus());
-                System.out.println();
-            }
-        }
-
-         */
-
     }
 
     private static void kuvaTulemused(Stage lava, int mituKüsimustKokku) {
 
-        VBox tulemusVBox = new VBox();
+        VBox tulemusVBox = new VBox(10);
         tulemusVBox.setAlignment(Pos.CENTER);
+
         Text läbi = new Text("Mäng on lõppenud!");
         läbi.setFont(Font.font("Segoe UI", FontWeight.BOLD, 15));
         Text tulemus = new Text("Tulemus: " + mituÕigesti + "/" + mituKüsimustKokku + " õiget vastust.");
-        tulemusVBox.getChildren().addAll(läbi, tulemus);
-        Scene lõppStseen = new Scene(tulemusVBox, 600, 400);
+        Text punktid = new Text("Punkte kokku: " + kasutajaPunktid);
 
+        Text lisaEdetabelisseText = new Text("Tulemuse lisamiseks sisestage nimi:");
+        TextField kasutajaNimiVäli = new TextField();
+        kasutajaNimiVäli.setMaxWidth(75);
+        Button lisaEdetabelisse = new Button("Lisa edetabelisse");
+        HBox lisaEdetabelisseHBox = new HBox(7.5);
+        lisaEdetabelisseHBox.setAlignment(Pos.CENTER);
+        Text lisamisViga = new Text("Te ei sisestanud nime!");
+        lisamisViga.setFill(Color.RED);
+        lisamisViga.setVisible(false);
+        lisaEdetabelisse.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+
+                // Võtame nime eest/tagant tühikud ära
+                String kasutajaNimi = kasutajaNimiVäli.getText().trim();
+
+                // Tahame, et kasutaja nimi ei oleks tühi
+                if (kasutajaNimi.isEmpty()) {
+                    lisamisViga.setText("Te ei sisestanud nime!");
+                    lisamisViga.setVisible(true);
+                } else if (kasutajaNimi.contains(";")) {
+                    // Kasutame edetabeli failis semikooloneid
+                    lisamisViga.setText("Ärge kasutage nimes semikoolonit (;)");
+                    lisamisViga.setVisible(true);
+                } else {
+                    Text edukasLisamine = new Text("Nimi lisatud edukalt!");
+                    lisamisViga.setVisible(false);
+                    edukasLisamine.setFill(Color.GREEN);
+                    lisaEdetabelisseHBox.getChildren().setAll(edukasLisamine);
+
+                    try {
+                        kirjutaEdetabetabeliFaili(kasutajaNimi);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
+        lisaEdetabelisseHBox.getChildren().addAll(lisaEdetabelisseText, kasutajaNimiVäli, lisaEdetabelisse);
+
+        alustaMänguNupp.setText("Alusta uut mängu");
+        tulemusVBox.getChildren().addAll(läbi, tulemus, punktid, lisaEdetabelisseHBox, lisamisViga, kuvaEdetabel, alustaMänguNupp, suleMäng);
+        Scene lõppStseen = new Scene(tulemusVBox, 600, 400);
         lava.setScene(lõppStseen);
+    }
+
+    private static void kirjutaEdetabetabeliFaili(String kasutajaNimi) throws IOException {
+
+        List<EdetabeliTulemus> tulemused = loeEdetabelFail();
+        tulemused.add(new EdetabeliTulemus(kasutajaNimi, kasutajaPunktid));
+        Collections.sort(tulemused);
+
+        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("edetabel.txt"), StandardCharsets.UTF_8));) {
+            for (EdetabeliTulemus edetabeliTulemus : tulemused) {
+                bw.write(edetabeliTulemus.getNimi() + ";" + edetabeliTulemus.getPunktid());
+                bw.newLine();
+            }
+        }
     }
 
     private static Scene kuvaKüsimus(AvatudKüsimus suvalineKüsimus, boolean kasValikvastused, VBox küsimusedJaVastusedVBox, List<RadioButton> valikud) {
@@ -455,7 +576,7 @@ public class Peaklass extends Application {
 
             for (int i = 0; i < valikvastusedArrayList.size() - 1; i += 2) {
                 String reaEsimeneValikvastus = valikvastusedArrayList.get(i);
-                String reaTeineValikvastus = valikvastusedArrayList.get(i+1);
+                String reaTeineValikvastus = valikvastusedArrayList.get(i + 1);
 
                 HBox rida = new HBox(10);
                 rida.setAlignment(Pos.CENTER);

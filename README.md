@@ -14,14 +14,16 @@ https://courses.cs.ut.ee/2024/OOP/spring/Main/Ruhm2 - Read Me jääb enamasti sa
 Märkus: 2. rühmatöösse ei ole lisatud 1. rühmatöö tunde. 
 
 - Sten-Egert Märtson (ajakulu: ~...h)
-	- Vajalikud osad 1.rühmatööst või kirjuta oma sõnadega juurde
-  -
-- Mirko Martjak (ajakulu: ~...h)
-  - Readme fail ja selle vormistuse kontroll
   - Kõik eelnev 1.rühmatööst
-	- Küsimused
-	- Küsimuste vorming txt failis
- 	- Readme fail ja selle vormistuse kontroll
+  - Klasside loomine
+  - JavaFX disain
+  - Punktide edetabel
+  - 
+- Mirko Martjak (ajakulu: ~...h)
+  - Kõik eelnev 1.rühmatööst
+  - Readme fail ja selle vormistuse kontroll
+  - Mängu bugide otsimine
+  - JavaFX bugi parandamine
 
 ### Mured
 

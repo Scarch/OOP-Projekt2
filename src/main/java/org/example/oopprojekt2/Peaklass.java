@@ -35,6 +35,7 @@ public class Peaklass extends Application {
     private static List<KüsimusteTeema> teemadeMassiv;
     private static KüsimusteTeema suvalineTeema;
     final private static Button esitaVastusNupp = new Button("Esita vastus");
+    final private static HBox esitaVastusNuppHBox = new HBox(); // Tekitame HBoxi, mille sisse lisame vastuse esitamise nupu. See lihtsustab hiljem nupu ära võtmist
     private static List<RadioButton> valikud;
     private static TextField avatudVastusVäli = new TextField();
     private static long algusAeg;
@@ -388,7 +389,11 @@ public class Peaklass extends Application {
             valikud.getFirst().setSelected(true);
         else
             küsimusVBox.getChildren().add(avatudVastusVäli);
-        küsimusVBox.getChildren().add(esitaVastusNupp);
+
+        esitaVastusNuppHBox.setAlignment(Pos.CENTER);
+        esitaVastusNuppHBox.getChildren().add(esitaVastusNupp);
+        küsimusVBox.getChildren().add(esitaVastusNuppHBox);
+
         lava.setScene(küsimusStseen);
 
         Button lõpetaMäng = new Button("Kuva mängu tulemus.");
@@ -427,7 +432,7 @@ public class Peaklass extends Application {
 
                 boolean kasÕige = kasutajaVastus.equalsIgnoreCase(suvalineKüsimus.getÕigeVastus());
                 Text tulemus = new Text();
-                küsimusVBox.getChildren().add(tulemus);
+                // küsimusVBox.getChildren().add(tulemus);
                 tulemus.setFont(Font.font("Segoe UI", FontWeight.BOLD, 15));
                 if (kasÕige) {
                     // Mängija saab boonuspunkte, kui on vastanud 15 sekundi sees;
@@ -443,6 +448,7 @@ public class Peaklass extends Application {
                     tulemus.setText("Vale vastus... Õige vastus: " + suvalineKüsimus.getÕigeVastus());
                     tulemus.setFill(Color.RED);
                 }
+                esitaVastusNuppHBox.getChildren().setAll(tulemus);
 
                 // Kas küsimused on otsa saanud?
                 if (mitmesKüsimus >= mituKüsimustKokku - 1) {
@@ -482,7 +488,8 @@ public class Peaklass extends Application {
                     valikud.getFirst().setSelected(true);
                 else
                     küsimusVBox.getChildren().add(avatudVastusVäli);
-                küsimusVBox.getChildren().add(esitaVastusNupp);
+                esitaVastusNuppHBox.getChildren().setAll(esitaVastusNupp);
+                küsimusVBox.getChildren().add(esitaVastusNuppHBox);
                 lava.setScene(küsimusStseen);
                 mitmesKüsimus++;
             }

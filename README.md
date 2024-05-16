@@ -63,6 +63,7 @@ Märkus: 2. rühmatöösse ei ole lisatud 1. rühmatöö tunde.
 - Koostasime tulemuseekraani ning vastava klassi tulemuste isenditeks.
 - Tekitasime võimaluse kuvada edetabelit ning salvestada tulemusi sinna.
 - Viimaseks sammuks oli üldine viimistlemine ning debugimine.
+- Debugimise all leida kõik üleliigesed nupu vajutamis ning teksti sisestamis vead. 
 
 ### Klassid
 
@@ -107,14 +108,15 @@ Märkus: 2. rühmatöösse ei ole lisatud 1. rühmatöö tunde.
 - tagastaSuvalineAvatudKüsimus meetod: tagastab suvalise avatud küsimuse ning eemaldab selle avatud küsimuste massiivist
 - tagastaSuvalineValikKüsimus: tagastab suvalise valikvastustega küsimuse ning eemaldab selle valikvastusega küsimuste massiivist
 
-### Testimine (Muuta vajadusel või lisada)
+### Testimine
 
 - Otsisime mängu buge, mida võib JavaFX tekidada.
 - Proovisime mängu loomulikult mängida.
 
-## Hinnang (Lisada)
+## Hinnang
 
 - Tuli üllatavalt mängitav programm välja.
+- Kasutajaliides näeb korralik välja JavaFX abil isegi, kui mõningaid uusi meetoeid olnud raske juurde lisada.
 
 ### Läks Hästi:
 

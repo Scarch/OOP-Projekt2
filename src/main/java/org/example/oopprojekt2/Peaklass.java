@@ -44,9 +44,13 @@ public class Peaklass extends Application {
     final private static Button kuvaEdetabel = new Button("Kuva edetabel");
     final private static Button suleMäng = new Button("Sule mäng");
     final private static File edetabeliFail = new File("edetabel.txt");
+    private static List<Stage> aknad = new ArrayList<Stage>();
 
     @Override
     public void start(Stage pealava) throws IOException {
+
+        aknad.add(pealava);
+
         BorderPane juur = new BorderPane();
 
         // Pealkiri
@@ -61,7 +65,7 @@ public class Peaklass extends Application {
         // Nupud
         VBox nupudVBox = new VBox();
         alustaMänguNupp.setText("Alusta mängu");
-        Button mänguInfo = new Button("Kuva sissejuhatus");
+        Button mänguInfo = new Button("Kuva mängu kirjeldus");
         alustaMänguNupp.setPrefHeight(50);
         alustaMänguNupp.setPrefWidth(125);
         nupudVBox.getChildren().addAll(alustaMänguNupp, mänguInfo, suleMäng, kuvaEdetabel);
@@ -100,6 +104,7 @@ public class Peaklass extends Application {
                 Scene sissejuhatusStseen = new Scene(sissejuhatusVBox, 700, 175);
 
                 Stage sissejuhatusLava = new Stage();
+                aknad.add(sissejuhatusLava);
                 sissejuhatusLava.setTitle("Küsimuste mängu sissejuhatus");
                 sissejuhatusLava.setScene(sissejuhatusStseen);
                 sissejuhatusLava.setResizable(false);
@@ -112,7 +117,9 @@ public class Peaklass extends Application {
         suleMäng.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                pealava.close();
+                for (Stage aken : aknad) {
+                    aken.close();
+                }
             }
         });
 
@@ -152,6 +159,7 @@ public class Peaklass extends Application {
 
                 Scene edetabelStseen = new Scene(tulemused, Math.max(200, Math.max(tulemusedPuuduvad.getLayoutBounds().getWidth() + 100, kõigeLaiem + 100f)), Math.max(100, tulemused.getLayoutBounds().getWidth() + 100));
                 Stage edetabelLava = new Stage();
+                aknad.add(edetabelLava);
                 edetabelLava.setTitle("Küsimuste mängu edetabel");
                 edetabelLava.setScene(edetabelStseen);
                 edetabelLava.setResizable(false);
@@ -192,7 +200,6 @@ public class Peaklass extends Application {
 
         }
 
-        Collections.sort(tulemused);
         return tulemused;
     }
 
@@ -382,7 +389,7 @@ public class Peaklass extends Application {
 
         küsimusVBox = new VBox(10);
         valikud = new ArrayList<>();
-        Scene küsimusStseen = kuvaKüsimus(suvalineKüsimus, kasValikvastused, küsimusVBox, valikud);
+        Scene küsimusStseen = koostaKüsimuseStseen(suvalineKüsimus, kasValikvastused, küsimusVBox, valikud);
         avatudVastusVäli = new TextField();
         avatudVastusVäli.setMaxWidth(150);
         if (kasValikvastused)
@@ -481,7 +488,7 @@ public class Peaklass extends Application {
                 // Teeme uue stseeni, kus kuvame uue küsimuse
                 küsimusVBox = new VBox(10);
                 valikud = new ArrayList<>();
-                Scene küsimusStseen = kuvaKüsimus(suvalineKüsimus, kasValikvastused, küsimusVBox, valikud);
+                Scene küsimusStseen = koostaKüsimuseStseen(suvalineKüsimus, kasValikvastused, küsimusVBox, valikud);
                 avatudVastusVäli = new TextField();
                 avatudVastusVäli.setMaxWidth(150);
                 if (kasValikvastused)
@@ -567,7 +574,7 @@ public class Peaklass extends Application {
         }
     }
 
-    private static Scene kuvaKüsimus(AvatudKüsimus suvalineKüsimus, boolean kasValikvastused, VBox küsimusedJaVastusedVBox, List<RadioButton> valikud) {
+    private static Scene koostaKüsimuseStseen(AvatudKüsimus suvalineKüsimus, boolean kasValikvastused, VBox küsimusedJaVastusedVBox, List<RadioButton> valikud) {
         küsimusedJaVastusedVBox.setAlignment(Pos.CENTER);
 
         Text küsimus = new Text(suvalineKüsimus.getKysimus());

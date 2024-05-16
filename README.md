@@ -2,8 +2,6 @@
 
 Antud repo sisaldab objektorienteeritud programmeerimise 2. rühmatöö faile.
 
-https://courses.cs.ut.ee/2024/OOP/spring/Main/Ruhm2 - Read Me jääb enamasti samaks.
-
 ## Autorid
 
 - Sten-Egert Märtson
@@ -19,11 +17,12 @@ Märkus: 2. rühmatöösse ei ole lisatud 1. rühmatöö tunde.
   - Peaklassi üldise funktsionaalsuse koostamine
   - JavaFX disain
   - Punktide edetabel
-- Mirko Martjak (ajakulu: ~...h)
+- Mirko Martjak (ajakulu: ~2h)
   - Kõik eelnev 1.rühmatööst
   - Readme fail ja selle vormistuse kontroll
   - Mängu bugide otsimine
-  - JavaFX bugi parandamine
+  - JavaFX bugi-de leidmine ja parandamine
+  - Üritada teha Dark Mode mängule.
 
 ### Mured
 
@@ -35,10 +34,13 @@ Märkus: 2. rühmatöösse ei ole lisatud 1. rühmatöö tunde.
     - Algul tahtsin kasutada `Map<String, Integer>` (String: kasutaja nimi, Integer: kasutaja punktiskoor), et salvestada eelnevad tulemused ja uue kasutaja tulemuse, kuid raskus seisneb sorteerimises: tahtsin, et see map oleks sorteeritud punktiskooride poolest, mis on tegelikult üllatavalt raske. Seega otsustasin lihtsalt luua uue klassi, kus kasutasin `implements Comparable`, et lihtsalt sorteerida alates suuremast tulemusest
  
 - Mirko Martjak
+  - Mõtlesin mängule juurde luua Dark Mode igale Scene lehele, sedasi, et see muudaks ka teksti valgeks. Kahjuks jäi see tegematta, sest UI oli ehitatud VBox, HBox ja BorderPane     peale ja seega seal olevad Scene tagatausta muutmine ei olnud võimalik, ning kui uurida, et kuidas muuta läbi VBox, HBox ja BorderPane, siis see oleks teinud koodi rohkem        keeruliseks ja mu originaal proovi kood, mis töötas oleks nagunii raisku läinud.
+  - Mõtlesin, et muudan UI disaini, aga mul polnud väga palju kogemust kuidas liigutada neid paremaks läbi VBox ja HBox, seega pidin otsima uusi võimalusi kuidas mängu muuta.
+  - Soovinud rohkem panustada mängu JavaFX loomisesse. Tekkis vahepeal ideede puudus
 
 ## Projekti kirjeldus
 
-### Programmi eesmärk (Muuta vajadusel või lisada)
+### Programmi eesmärk
 
 - Programmi kaustas on valmis tehtud küsimused igale teemale. Neid saab omal soovil muuta.
 - Küsimuste liike on kokku kaks: valikvastustega ja avatud küsimused.
@@ -50,7 +52,7 @@ Märkus: 2. rühmatöösse ei ole lisatud 1. rühmatöö tunde.
 - Punktid sõltuvad õige vastuse ning sisestamis kiirusest.
 - Kui mäng ära lõpeb, siis tagastakse punkti summa ja küsitakse, et kas soovid üle vaadata küsimused, mis läksid valesti.
 
-### Protsess (Muuta vajadusel või lisada)
+### Protsess
 
 - Otsustasime projekti jätkata (mõlemad)
 - Alustasime peaekraani koostamisega, mida kuvatakse, kui mäng avatakse. Rakendasime selleks BorderPane'i.
@@ -61,7 +63,7 @@ Märkus: 2. rühmatöösse ei ole lisatud 1. rühmatöö tunde.
 - Tekitasime võimaluse kuvada edetabelit ning salvestada tulemusi sinna.
 - Viimaseks sammuks oli üldine viimistlemine ning debugimine.
 
-### Klassid (Muuta vajadusel või lisada)
+### Klassid
 
 - AvatudKüsimus: peaklassis loeme teema küsimuste failist saadud sisu, milles read muudame antud klassi isendteks, mis sisaldavad küsimust ja vastust.
 - ValikvastustegaKüsimused: peaklassis loeme failist saadud sisu, milles read muudame antud klassi isendteks, mis sisaldavad küsimust, õiget vastust ja valikvastuseid.
@@ -69,7 +71,7 @@ Märkus: 2. rühmatöösse ei ole lisatud 1. rühmatöö tunde.
 - EdetabeliTulemus: Lihtsustab edetabelis tulemuste sorteerimist ning üldist käideldamist
 - Peaklass: Klass, milles mäng käivitatakse
 
-### Meetodid (Muuta vajadusel või lisada)
+### Meetodid
 
 #### Peaklass
 
@@ -118,6 +120,7 @@ Märkus: 2. rühmatöösse ei ole lisatud 1. rühmatöö tunde.
 - Kood töötab (vist)
 - Edetabel: nii kuvamine, faili kirjutamine kui ka failist lugemine
 - Küsimuste kuvamine (for-tsükkel nupuvajutuste kujul)
+- Sai katsetada tagatausta värvimuutmist.
 
 ### Vajab arendamist:
 
@@ -125,6 +128,4 @@ Märkus: 2. rühmatöösse ei ole lisatud 1. rühmatöö tunde.
   - Antud kujul on peamiselt valge ekraan musta tekstiga. Mõnes kohas on aga fonte muudetud või kujundust kohandatud, et see oleks loetav (edetabel muudab suurust vastavalt edetabeli sisule)
 - Programm kogub kasutaja poolt valesti vastatud küsimused kogutud listi, aga ei kasuta seda listi
 - Küsimuste väljastamine ei ole perfektne: kasutaja võib valida mitme teema vahel, aga on võimalus, et ühe teema küsimusi ei kuvata, sest küsimusi võetakse suvaliselt teemade vahel, kuigi on mängu seadistuses küsitud konkreetselt, mitu küsimust soovib kasutaja saad iga teema kohta.
-
-### Kokkuvõte:
-
+- Teha valmis Dark Mode.

@@ -15,10 +15,10 @@ Märkus: 2. rühmatöösse ei ole lisatud 1. rühmatöö tunde.
 
 - Sten-Egert Märtson (ajakulu: ~10h)
   - Kõik eelnev 1.rühmatööst
-  - Klasside loomine
+  - Klasside loomine (EdetabeliTulemus, AvatudKüsimus, ValikvastustegaKüsimused, KüsimusteTeema)
+  - Peaklassi üldise funktsionaalsuse koostamine
   - JavaFX disain
-  - Punktide edetabel 
-  - 
+  - Punktide edetabel
 - Mirko Martjak (ajakulu: ~...h)
   - Kõik eelnev 1.rühmatööst
   - Readme fail ja selle vormistuse kontroll
@@ -53,7 +53,13 @@ Märkus: 2. rühmatöösse ei ole lisatud 1. rühmatöö tunde.
 ### Protsess (Muuta vajadusel või lisada)
 
 - Otsustasime projekti jätkata (mõlemad)
-	
+- Alustasime peaekraani koostamisega, mida kuvatakse, kui mäng avatakse. Rakendasime selleks BorderPane'i.
+- Lõime mängu sulgemise ja mängu kirjelduse nupud ning lisasime vajaliku funktsionaalsuse.
+- Koostasime nupu mängu alustamiseks ning seejärel lõime mängu seadistamise võimaluse (alustaMäng meetodi kujul)
+- Seejärel koostasime küsimuste küsimise meetodi (alustaKüsimist), mis nõudis võrreldes muude meetoditega kõige rohkem aega.
+- Koostasime tulemuseekraani ning vastava klassi tulemuste isenditeks.
+- Tekitasime võimaluse kuvada edetabelit ning salvestada tulemusi sinna.
+- Viimaseks sammuks oli üldine viimistlemine ning debugimine.
 
 ### Klassid (Muuta vajadusel või lisada)
 
@@ -75,7 +81,7 @@ Märkus: 2. rühmatöösse ei ole lisatud 1. rühmatöö tunde.
 - `kuvaTulemused`: Kuvab pealavale mängu lõppemisel tulemuste stseeni, kust saab uut mängu alustada, mängu sulgeda või edetabelit kuvada.
 - `loeFail`: Meetod, mis loeb ära txt faili sisu ning paneb sisu põhjal küsimused massiivi.
 - `lisatekstVBoxi`: Abiks mängu kirjelduse kuvamisel. Muudab sõne tükkideks ning lisab sõne tükid eraldi ridadele.
-- `loeEdetabelFail`: Loeb edetabelist kõik tulemused ning tagastab need listis EdetabeliTulemus isenditena.
+- `loeEdetabelFail`: Loeb edetabelist kõik tulemused ning tagastab need listis `EdetabeliTulemus` isenditena.
 - `oota3Sekundit`: Kuvab pealavale ooteekraani soovitud tekstiga, mis kestab 3 sekundit.
 
 - `alustaMänguNupp`: Vajutusel käitab `alustaMäng` meetodi.
@@ -105,10 +111,20 @@ Märkus: 2. rühmatöösse ei ole lisatud 1. rühmatöö tunde.
 
 ## Hinnang (Lisada)
 
+- Tuli üllatavalt mängitav programm välja.
+
 ### Läks Hästi:
 
 - Kood töötab (vist)
+- Edetabel: nii kuvamine, faili kirjutamine kui ka failist lugemine
+- Küsimuste kuvamine (for-tsükkel nupuvajutuste kujul)
+
 ### Vajab arendamist:
 
-### Kokkuvõtte:
+- Mängu välimuse disain
+  - Antud kujul on peamiselt valge ekraan musta tekstiga. Mõnes kohas on aga fonte muudetud või kujundust kohandatud, et see oleks loetav (edetabel muudab suurust vastavalt edetabeli sisule)
+- Programm kogub kasutaja poolt valesti vastatud küsimused kogutud listi, aga ei kasuta seda listi
+- Küsimuste väljastamine ei ole perfektne: kasutaja võib valida mitme teema vahel, aga on võimalus, et ühe teema küsimusi ei kuvata, sest küsimusi võetakse suvaliselt teemade vahel, kuigi on mängu seadistuses küsitud konkreetselt, mitu küsimust soovib kasutaja saad iga teema kohta.
+
+### Kokkuvõte:
 

@@ -17,6 +17,7 @@ Märkus: 2. rühmatöösse ei ole lisatud 1. rühmatöö tunde.
   - Peaklassi üldise funktsionaalsuse koostamine
   - JavaFX disain
   - Punktide edetabel
+  - Koodi kommenteerimine
 - Mirko Martjak (ajakulu: ~2h)
   - Kõik eelnev 1.rühmatööst
   - Readme fail ja selle vormistuse kontroll
@@ -45,13 +46,12 @@ Märkus: 2. rühmatöösse ei ole lisatud 1. rühmatöö tunde.
 
 - Programmi kaustas on valmis tehtud küsimused igale teemale. Neid saab omal soovil muuta.
 - Küsimuste liike on kokku kaks: valikvastustega ja avatud küsimused.
-- Programm algab mängu lühikese tutvustusega, mida kasutaja võib ka vahele jätta.
 - Kasutaja saab mängule öelda, et kas soovib valikvastusega küsimusi või mitte.
 - Kasutaja saab mängule öelda, mitu teemat ta soovib võtta ja millised need oleks.
-- Pärast teemade valimist mäng algab.
+- Pärast mängu sätete määramist mäng algab.
 - Mäng toimub kiiruse peale: kui vastad 15 sekundi jooksul, siis saad rohkem punkte.
-- Punktid sõltuvad õige vastuse ning sisestamis kiirusest.
-- Kui mäng ära lõpeb, siis tagastakse punkti summa ja küsitakse, et kas soovid üle vaadata küsimused, mis läksid valesti.
+- Punktide saamiseks peab vastama õigesti.
+- Kui mäng ära lõpeb, siis tagastakse punkti summa ja küsitakse, et kas soovid tulemuse lisada edetabelisse.
 
 ### Protsess
 
@@ -111,12 +111,14 @@ Märkus: 2. rühmatöösse ei ole lisatud 1. rühmatöö tunde.
 ### Testimine
 
 - Otsisime mängu buge, mida võib JavaFX tekidada.
+- Vajutasime nuppe mitteettenähtud moel.
 - Proovisime mängu loomulikult mängida.
+- Lasime teistel isikutel mängu mängida värske pilguga.
 
 ## Hinnang
 
 - Tuli üllatavalt mängitav programm välja.
-- Kasutajaliides näeb korralik välja JavaFX abil isegi, kui mõningaid uusi meetoeid olnud raske juurde lisada.
+- Kasutajaliides näeb korralik välja, soovisime lisada ilusama disaini, kuid mõningaid uusi meetodeid oli rakse juurde lisada.
 
 ### Läks Hästi:
 
@@ -124,6 +126,7 @@ Märkus: 2. rühmatöösse ei ole lisatud 1. rühmatöö tunde.
 - Edetabel: nii kuvamine, faili kirjutamine kui ka failist lugemine
 - Küsimuste kuvamine (for-tsükkel nupuvajutuste kujul)
 - Sai katsetada tagatausta värvimuutmist.
+- Sai kogemust JavaFX-iga
 
 ### Vajab arendamist:
 
@@ -131,4 +134,4 @@ Märkus: 2. rühmatöösse ei ole lisatud 1. rühmatöö tunde.
   - Antud kujul on peamiselt valge ekraan musta tekstiga. Mõnes kohas on aga fonte muudetud või kujundust kohandatud, et see oleks loetav (edetabel muudab suurust vastavalt edetabeli sisule)
 - Programm kogub kasutaja poolt valesti vastatud küsimused kogutud listi, aga ei kasuta seda listi
 - Küsimuste väljastamine ei ole perfektne: kasutaja võib valida mitme teema vahel, aga on võimalus, et ühe teema küsimusi ei kuvata, sest küsimusi võetakse suvaliselt teemade vahel, kuigi on mängu seadistuses küsitud konkreetselt, mitu küsimust soovib kasutaja saad iga teema kohta.
-- Teha valmis Dark Mode.
+- Oleks saanud koostada Dark Mode'i

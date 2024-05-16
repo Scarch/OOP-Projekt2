@@ -30,7 +30,7 @@ public class Peaklass extends Application {
     private static int kasutajaPunktid = 0;
     private static int mitmesKüsimus = 0;
     private static int mituÕigesti = 0;
-    private static List<AvatudKüsimus> valestiVastatudKüsimused = new ArrayList<>();
+    private static List<AvatudKüsimus> valestiVastatudKüsimused = new ArrayList<>(); // Jäi antud koodis kasutamata, kuid saaks sellega koostada nt vigade kuvamise akna nagu eelmises rühmatöös
     private static AvatudKüsimus suvalineKüsimus;
     private static List<KüsimusteTeema> teemadeMassiv;
     private static KüsimusteTeema suvalineTeema;
@@ -40,12 +40,16 @@ public class Peaklass extends Application {
     private static TextField avatudVastusVäli = new TextField();
     private static long algusAeg;
     private static VBox küsimusVBox;
-    final private static Button järgmineKüsimus = new Button("Liigu järgmisele küsimusele");
+    final private static Button järgmineKüsimusNupp = new Button("Liigu järgmisele küsimusele");
     final private static Button kuvaEdetabel = new Button("Kuva edetabel");
     final private static Button suleMäng = new Button("Sule mäng");
     final private static File edetabeliFail = new File("edetabel.txt");
     private static List<Stage> aknad = new ArrayList<Stage>();
 
+    /**
+     * @param pealava Pealava, kus hakkab peamine töö toimuma
+     * @throws IOException Saadame erindi edasi
+     */
     @Override
     public void start(Stage pealava) throws IOException {
 
@@ -92,12 +96,12 @@ public class Peaklass extends Application {
                 VBox sissejuhatusVBox = new VBox();
                 String sissejuhatusTekst = "Programmi kaustas on valmis tehtud küsimused igale teemale. Neid saab omal soovil muuta.;" +
                         "Küsimuste liike on kokku kaks: valikvastustega ja avatud küsimused.;" +
-                        "Kasutaja saab mängule öelda, et kas soovib valikvastusega küsimusi ka või mitte.;" +
+                        "Kasutaja saab mängule öelda, et kas soovib valikvastusega küsimusi või mitte.;" +
                         "Kasutaja saab mängule öelda, mitu teemat ta soovib võtta ja millised need oleks.;" +
                         "Pärast teemade valimist mäng algab.;" +
                         "Mäng toimub kiiruse peale: kui vastad 15 sekundi jooksul, siis saad rohkem punkte.;" +
                         "Punkte saab kui esitab õige vastuse;" +
-                        "Kui mäng lõpeb, siis tagastakse punktide summa ja küsitakse, et kas soovid üle vaadata küsimused, mis läksid valesti.";
+                        "Kui mäng lõpeb, siis tagastakse punktide summa ja küsitakse, et kas soovid tulemuse lisada edetabelisse.";
                 lisatekstVBoxi(sissejuhatusVBox, sissejuhatusTekst);
                 sissejuhatusVBox.setAlignment(Pos.CENTER);
 
@@ -123,21 +127,21 @@ public class Peaklass extends Application {
             }
         });
 
+        // Edetabeli seadistamine
         if (!edetabeliFail.exists())
             edetabeliFail.createNewFile();
         kuvaEdetabel.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
 
-                List<EdetabeliTulemus> edetabeliTulemused = new ArrayList<>();
-
+                // Lisame edetabeli tulemused listi, et saaks lihtsalt neid uude stseeni lisada
+                List<EdetabeliTulemus> edetabeliTulemused;
                 try {
-                    // Tagastab sorteerituna
                     edetabeliTulemused = loeEdetabelFail();
+                    Collections.sort(edetabeliTulemused);
                 } catch (IOException e) {
                     throw new RuntimeException(e); // Pidi kasutama try-catch, sest ei saa selle meetodi signatuuri panna "throws ..."
                 }
-
 
                 VBox tulemused = new VBox();
                 tulemused.setAlignment(Pos.CENTER);
@@ -183,6 +187,12 @@ public class Peaklass extends Application {
         pealava.show();
     }
 
+    /**
+     * Loeb edetabelist tulemused listi
+     *
+     * @return Tulemuste list
+     * @throws IOException Saadame erindi edasi
+     */
     private static List<EdetabeliTulemus> loeEdetabelFail() throws IOException {
 
         List<EdetabeliTulemus> tulemused = new ArrayList<>();
@@ -203,6 +213,12 @@ public class Peaklass extends Application {
         return tulemused;
     }
 
+    /**
+     * Lisame mingi teksti VBoxi. Muudab sõne tükkideks, et saaks neid VBoxi eri ridadel kuvada.
+     *
+     * @param vbox  Kuhu lisame sõnesid
+     * @param tekst Sõne, mida splititakse semikooloni esinemise põhjal. Iga osa luuakse Text muutujaks, mis läheb eraldi VBox reale.
+     */
     private void lisatekstVBoxi(VBox vbox, String tekst) {
         String[] tekstOsadena = tekst.split(";");
 
@@ -248,16 +264,28 @@ public class Peaklass extends Application {
         return kysimused;
     }
 
+    /**
+     * Mängu algse seadistuse määramiseks. Muudab pealava nii, et kasutaja saaks valida, milliste teemade küsimusi kuvatakse, millist sorti küsimusi (valik või avatud küsimused) küsitakse ja mitu küsimust esitatakse.
+     *
+     * @param lava Lava, kuhu kuvame erinevad sätted.
+     * @throws IOException          Saadame erindi edasi
+     * @throws InterruptedException Saadame erindi edasi
+     */
     private static void alustaMäng(Stage lava) throws IOException, InterruptedException {
 
+        // Tegelikult pole antud olukorras piiripaani vaja
         BorderPane piiripaan = new BorderPane();
 
+        // Kuhu hakkame erinevaid
         VBox vbox = new VBox(5);
         piiripaan.setCenter(vbox);
         vbox.setAlignment(Pos.CENTER);
 
+        // Erindi tekst, mida saab kuvada, muuta või peita vastavalt kasutaja sisendile
         Text erind = new Text();
+        erind.setFill(Color.RED);
 
+        // Küsimuste vormi määramine
         Text küsimuseTüüp = new Text("Mis küsimusi soovite?");
         RadioButton avatudVastustega = new RadioButton("Avatud vastustega");
         RadioButton valikVastustega = new RadioButton("Valikvastustega");
@@ -266,18 +294,18 @@ public class Peaklass extends Application {
         valikVastustega.setToggleGroup(lülitusGrupp);
         valikVastustega.setSelected(true);
 
-        erind.setFill(Color.RED);
+        // Teemade määramine
         Text juhis = new Text("Valige soovitud teemad (vähemalt üks)");
         CheckBox ajalooValik = new CheckBox("Ajalugu");
         CheckBox eestiKeeleValik = new CheckBox("Eesti keel");
         CheckBox kirjanduseValik = new CheckBox("Kirjandus");
         CheckBox ühiskonnaValik = new CheckBox("Ühiskond");
 
+        // Küsimuste arvu määramine
         Text arvuKüsimus = new Text("Sisestage küsimuste arv (1-5), mida soovite saada iga teema puhul.");
         TextField mituKüsimust = new TextField();
         mituKüsimust.setMaxWidth(50);
-
-        // Lubame ainult arvude sisestamist
+        // Lubame ainult arvude sisestamist, töötab ka paste'imise vastu
         mituKüsimust.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -288,8 +316,10 @@ public class Peaklass extends Application {
             }
         });
 
+        // Nupp sätete lukku panemiseks
         Button edasiNupp = new Button("Valikud tehtud");
 
+        // List, et saaks kontrollida, kas valik on tehtud
         List<CheckBox> valikud = new ArrayList<>();
         valikud.add(ajalooValik);
         valikud.add(eestiKeeleValik);
@@ -299,8 +329,11 @@ public class Peaklass extends Application {
         edasiNupp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+
+                // Algne erindi sõne
                 String erindString = "";
 
+                // Kontrollime, et vähemalt üks küsimuste teema oleks valitud
                 boolean vähemaltÜksValitud = false;
                 for (CheckBox checkBox : valikud) {
                     if (checkBox.isSelected()) {
@@ -309,9 +342,9 @@ public class Peaklass extends Application {
                     }
                 }
                 if (!vähemaltÜksValitud)
-                    erindString += "Te ei ole ühtki teemat valinud!";
+                    erindString += "Te ei ole ühtki teemat valinud!"; // Lisame erindi sõnele juurde
 
-
+                // Kontrollime, kas soovitud küsimuste arv on korrektne
                 boolean kasSobivKüsimusteArv = false;
                 int mituKüsimustInt = 0;
                 if (mituKüsimust.getText().isEmpty() || mituKüsimust.getText() == null) {
@@ -324,9 +357,10 @@ public class Peaklass extends Application {
                         kasSobivKüsimusteArv = true;
                 }
 
+                // Kuvame erindi(d)
                 erind.setText(erindString.trim());
 
-
+                // Kui kõik korras, sisi liigume edasi alustaKüsimist meetodi juurde
                 if (kasSobivKüsimusteArv && vähemaltÜksValitud) {
                     boolean kasValikvastustega = valikVastustega.isSelected();
                     List<String> misTeemad = new ArrayList<>();
@@ -378,15 +412,16 @@ public class Peaklass extends Application {
         oota3Sekundit(lava, "Esimene küsimus tuleb 3 sekundi pärast...");
         // Väike paus enne küsimuste küsimist
 
-        // Selles tsükklis küsime küsimusi
-        // Peab mõtlema, kas küsimused lähevad suvaliselt teemade vahel või ühe teema küsimused tulevad järjest
-
+        // Otsime suvalise teema, millest küsimust küsida
+        // Pole perfektselt rakendatud
         int suvaliseTeemaIndeks = (int) (teemadeMassiv.size() * Math.random());
         suvalineTeema = teemadeMassiv.get(suvaliseTeemaIndeks);
 
+        // Vastavalt kasutaja soovile tagastame õige küsimusesorti
         if (kasValikvastused) suvalineKüsimus = suvalineTeema.tagastaSuvalineValikKüsimus();
         else suvalineKüsimus = suvalineTeema.tagastaSuvalineAvatudKüsimus();
 
+        // Koostame stseeni, kus kuvame küsimust
         küsimusVBox = new VBox(10);
         valikud = new ArrayList<>();
         Scene küsimusStseen = koostaKüsimuseStseen(suvalineKüsimus, kasValikvastused, küsimusVBox, valikud);
@@ -412,10 +447,12 @@ public class Peaklass extends Application {
         });
 
         // Küsime ja ootame vastust
-        // Sõltuvalt kui kiiresti vastas võime lisada boonuspunkte
-        // Iga küsimuse eest võiks anda mingi koguse baaspunkte
+        // Sõltuvalt kui kiiresti vastati lisame boonuspunkte
+        // Iga küsimuse eest anname 50 baaspunkti, juhul kui vastati õigelt
 
+        // Boonuspunktide jagamiseks mõeldud aja mõõtmine
         algusAeg = System.currentTimeMillis();
+
         esitaVastusNupp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -437,9 +474,11 @@ public class Peaklass extends Application {
                     kasutajaVastus = avatudVastusVäli.getText();
                 }
 
+                // Kas kasutaja vastas õigesti
                 boolean kasÕige = kasutajaVastus.equalsIgnoreCase(suvalineKüsimus.getÕigeVastus());
+
+                // Teavitame kasutajat tulemusest
                 Text tulemus = new Text();
-                // küsimusVBox.getChildren().add(tulemus);
                 tulemus.setFont(Font.font("Segoe UI", FontWeight.BOLD, 15));
                 if (kasÕige) {
                     // Mängija saab boonuspunkte, kui on vastanud 15 sekundi sees;
@@ -470,13 +509,15 @@ public class Peaklass extends Application {
                     if (suvalineTeema.getAvatudVastusegaKüsimused().isEmpty() || suvalineTeema.getValikvastusegaKüsimused().isEmpty())
                         teemadeMassiv.remove(suvaliseTeemaIndeks);
 
-                    küsimusVBox.getChildren().add(järgmineKüsimus);
+                    // Lisame nupu, millega saame liikuda järgmise küsimuse juurde
+                    küsimusVBox.getChildren().add(järgmineKüsimusNupp);
 
                 }
             }
         });
 
-        järgmineKüsimus.setOnAction(new EventHandler<ActionEvent>() {
+        // Nupp järgmisele küsimusele liikumiseks
+        järgmineKüsimusNupp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 // Otsime uue suvalise küsimuse
@@ -497,6 +538,8 @@ public class Peaklass extends Application {
                     küsimusVBox.getChildren().add(avatudVastusVäli);
                 esitaVastusNuppHBox.getChildren().setAll(esitaVastusNupp);
                 küsimusVBox.getChildren().add(esitaVastusNuppHBox);
+
+                // Kuvame stseeni ning suurendame vastatud küsimuste arvu
                 lava.setScene(küsimusStseen);
                 mitmesKüsimus++;
             }
@@ -504,8 +547,15 @@ public class Peaklass extends Application {
 
     }
 
+    /**
+     * Tulemusekraan, kus kuvatakse õigesti vastatud küsimuste arv ja punktisumma
+     *
+     * @param lava              Lava, kus asju kuvame
+     * @param mituKüsimustKokku Mitmele küsimusele kasutaja vastas
+     */
     private static void kuvaTulemused(Stage lava, int mituKüsimustKokku) {
 
+        // Kuvame asjad VBoxi
         VBox tulemusVBox = new VBox(10);
         tulemusVBox.setAlignment(Pos.CENTER);
 
@@ -517,9 +567,11 @@ public class Peaklass extends Application {
         Text lisaEdetabelisseText = new Text("Tulemuse lisamiseks sisestage nimi:");
         TextField kasutajaNimiVäli = new TextField();
         kasutajaNimiVäli.setMaxWidth(75);
+
         Button lisaEdetabelisse = new Button("Lisa edetabelisse");
         HBox lisaEdetabelisseHBox = new HBox(7.5);
         lisaEdetabelisseHBox.setAlignment(Pos.CENTER);
+
         Text lisamisViga = new Text("Te ei sisestanud nime!");
         lisamisViga.setFill(Color.RED);
         lisamisViga.setVisible(false);
@@ -560,6 +612,12 @@ public class Peaklass extends Application {
         lava.setScene(lõppStseen);
     }
 
+    /**
+     * Kirjutab kasutaja tulemuse faili
+     *
+     * @param kasutajaNimi Kasutaja nimi
+     * @throws IOException Saadame erindi edasi
+     */
     private static void kirjutaEdetabetabeliFaili(String kasutajaNimi) throws IOException {
 
         List<EdetabeliTulemus> tulemused = loeEdetabelFail();
@@ -574,6 +632,15 @@ public class Peaklass extends Application {
         }
     }
 
+    /**
+     * Loob küsimuse stseeni
+     *
+     * @param suvalineKüsimus         Küsimus, mida kuvatakse
+     * @param kasValikvastused        Kas kasutaja soovib valikvastustega küsimusi
+     * @param küsimusedJaVastusedVBox Kuhu erinevaid elemente lisame
+     * @param valikud                 Valikvastuste list
+     * @return Sobiv küsimuse stseen koos küsimusega ning vajadusel vastuste variantidega
+     */
     private static Scene koostaKüsimuseStseen(AvatudKüsimus suvalineKüsimus, boolean kasValikvastused, VBox küsimusedJaVastusedVBox, List<RadioButton> valikud) {
         küsimusedJaVastusedVBox.setAlignment(Pos.CENTER);
 
@@ -616,6 +683,13 @@ public class Peaklass extends Application {
         return new Scene(küsimusedJaVastusedVBox, Math.max(600, küsimus.getLayoutBounds().getWidth() + 20), 400);
     }
 
+    /**
+     * Kuvab lavale stseeni, mis on praktiliselt ooteekraan
+     *
+     * @param lava          Kuhu stseeni kuvame
+     * @param midaKuvatakse Mida ooteekraanil kuvame
+     * @throws InterruptedException Saadame ootamiserindi edasi
+     */
     private static void oota3Sekundit(Stage lava, String midaKuvatakse) throws InterruptedException {
         VBox algusVBox = new VBox(10);
         algusVBox.setAlignment(Pos.CENTER);
@@ -627,6 +701,12 @@ public class Peaklass extends Application {
         TimeUnit.SECONDS.sleep(3);
     }
 
+    /**
+     * Leiab teema .txt faili, kus asuvad küsimused koos vastustega
+     *
+     * @param teemaString Teema nimi
+     * @return Tagastab teema faili
+     */
     private static String leiaTeemaFail(String teemaString) {
 
         if (teemaString.equals("Ajalugu")) return "ajalooküsimused.txt";

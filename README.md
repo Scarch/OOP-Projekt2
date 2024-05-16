@@ -36,7 +36,8 @@ Märkus: 2. rühmatöösse ei ole lisatud 1. rühmatöö tunde.
 - Mirko Martjak
   - Mõtlesin mängule juurde luua Dark Mode igale Scene lehele, sedasi, et see muudaks ka teksti valgeks. Kahjuks jäi see tegematta, sest UI oli ehitatud VBox, HBox ja BorderPane     peale ja seega seal olevad Scene tagatausta muutmine ei olnud võimalik, ning kui uurida, et kuidas muuta läbi VBox, HBox ja BorderPane, siis see oleks teinud koodi rohkem        keeruliseks ja mu originaal proovi kood, mis töötas oleks nagunii raisku läinud.
   - Mõtlesin, et muudan UI disaini, aga mul polnud väga palju kogemust kuidas liigutada neid paremaks läbi VBox ja HBox, seega pidin otsima uusi võimalusi kuidas mängu muuta.
-  - Soovinud rohkem panustada mängu JavaFX loomisesse. Tekkis vahepeal ideede puudus
+  - Mõtlesime, et loome mängule timeri juurde, aga siis oleks oleks pidanud kasutama Thread meetoteid, mida on otseselt raske kirjutada JavaFX sisse + suur ajakulu.
+  - Soovinud rohkem panustada mängu JavaFX loomisesse. Tekkis vahepeal ideede puudus.
 
 ## Projekti kirjeldus
 
